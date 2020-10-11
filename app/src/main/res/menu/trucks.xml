@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/gazelle"
+        android:orderInCategory="100"
+        android:title="@string/gazelle"
+        app:showAsAction="never" >
+        <menu >
+            <item
+                android:id="@+id/gazelle_tent"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_tent"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_thermos"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_thermos"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_height"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_height"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_board"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_board"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_farmer"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_farmer"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_ref"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_ref"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_pyramid"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_pyramid"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/gazelle_towing"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_towing"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+    <item android:id="@+id/gazelle_long"
+        android:orderInCategory="100"
+        android:title="@string/gazelle_long"
+        app:showAsAction="never" >
+        <menu >
+            <item android:id="@+id/gazelle_long_original"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_original"
+                app:showAsAction="never" />
+            <item android:id="@+id/gazelle_long_board"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_board"
+                app:showAsAction="never" />
+            <item android:id="@+id/gazelle_long_farmer"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_farmer"
+                app:showAsAction="never" />
+            <item android:id="@+id/gazelle_long_ref"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_ref"
+                app:showAsAction="never" />
+            <item android:id="@+id/gazelle_long_pyramid"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_pyramid"
+                app:showAsAction="never" />
+            <item android:id="@+id/gazelle_long_height"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_height"
+                app:showAsAction="never" />
+            <item android:id="@+id/gazelle_long_long"
+                android:orderInCategory="100"
+                android:title="@string/gazelle_long_long"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+    <item android:id="@+id/ton_2"
+        android:orderInCategory="100"
+        android:title="@string/ton_2"
+        app:showAsAction="never" >
+        <menu >
+            <item android:id="@+id/ton_2_original"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_original"
+                app:showAsAction="never"/>
+            <item android:id="@+id/ton_2_board"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_board"
+                app:showAsAction="never"/>
+            <item android:id="@+id/ton_2_farmer"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_farmer"
+                app:showAsAction="never"/>
+            <item android:id="@+id/ton_2_ref"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_ref"
+                app:showAsAction="never"/>
+            <item android:id="@+id/ton_2_pyramid"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_pyramid"
+                app:showAsAction="never"/>
+            <item android:id="@+id/ton_2_height"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_height"
+                app:showAsAction="never"/>
+            <item android:id="@+id/ton_2_long"
+                android:orderInCategory="100"
+                android:title="@string/ton_2_long"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+    <item android:id="@+id/ton_3"
+        android:orderInCategory="100"
+        android:title="@string/ton_3"
+        app:showAsAction="never" >
+        <menu >
+            <item android:id="@+id/ton_3_original_mini"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_original_mini"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_original_maxi"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_original_maxi"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_board"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_board"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_farmer"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_farmer"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_ref"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_ref"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_multi_ref"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_multi_ref"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_pyramid"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_pyramid"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_3_long"
+                android:orderInCategory="100"
+                android:title="@string/ton_3_long"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+    <item android:id="@+id/ton_5"
+        android:orderInCategory="100"
+        android:title="@string/ton_5"
+        app:showAsAction="never" >
+        <menu >
+            <item android:id="@+id/ton_5_mini"
+                android:orderInCategory="100"
+                android:title="@string/ton_5_mini"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_5_medium"
+                android:orderInCategory="100"
+                android:title="@string/ton_5_medium"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_5_maxi"
+                android:orderInCategory="100"
+                android:title="@string/ton_5_maxi"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_5_board"
+                android:orderInCategory="100"
+                android:title="@string/ton_5_board"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_5_ref_mini"
+                android:orderInCategory="100"
+                android:title="@string/ton_5_ref_mini"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_5_ref_maxi"
+                android:orderInCategory="100"
+                android:title="@string/ton_5_ref_maxi"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+    <item android:id="@+id/ton_7"
+        android:orderInCategory="100"
+        android:title="@string/ton_7"
+        app:showAsAction="never" >
+        <menu >
+            <item android:id="@+id/ton_7_min"
+                android:orderInCategory="100"
+                android:title="@string/ton_7_min"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_7_max"
+                android:orderInCategory="100"
+                android:title="@string/ton_7_max"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_7_board"
+                android:orderInCategory="100"
+                android:title="@string/ton_7_board"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_7_ref_min"
+                android:orderInCategory="100"
+                android:title="@string/ton_7_ref_min"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_7_ref_max"
+                android:orderInCategory="100"
+                android:title="@string/ton_7_ref_max"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+    <item android:id="@+id/ton_10"
+        android:orderInCategory="100"
+        android:title="@string/ton_10"
+        app:showAsAction="never" >
+        <menu >
+            <item android:id="@+id/ton_10_min"
+                android:orderInCategory="100"
+                android:title="@string/ton_10_min"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_10_max"
+                android:orderInCategory="100"
+                android:title="@string/ton_10_max"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_10_board"
+                android:orderInCategory="100"
+                android:title="@string/ton_10_board"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_10_ref_min"
+                android:orderInCategory="100"
+                android:title="@string/ton_10_ref_min"
+                app:showAsAction="never" />
+            <item android:id="@+id/ton_10_ref_max"
+                android:orderInCategory="100"
+                android:title="@string/ton_10_ref_max"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+</menu>

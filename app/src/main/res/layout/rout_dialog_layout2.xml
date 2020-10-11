@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/nameView2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Добавь информацию"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/shareBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewAdditions"
+        android:layout_alignStart="@+id/textViewAdditions"
+        android:layout_alignEnd="@+id/textViewAdditions"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="69dp"
+        android:text="Оформить заявку" />
+
+    <EditText
+        android:id="@+id/textViewTime2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewInfo1"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:inputType="textCapSentences"/>
+
+    <EditText
+        android:id="@+id/textViewAdditions"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewInfo2"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:inputType="textCapSentences"/>
+
+    <TextView
+        android:id="@+id/textViewInfo1"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameView2"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="Введи время подачи машины"
+        android:textAlignment="center"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/textViewInfo2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTime2"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="Введи дополнения к заявке (по желанию)"
+        android:textAlignment="center"
+        android:textSize="17sp" />
+</RelativeLayout>
