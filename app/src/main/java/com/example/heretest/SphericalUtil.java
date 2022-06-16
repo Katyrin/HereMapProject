@@ -104,13 +104,13 @@ public class SphericalUtil {
             return 0.0D;
         } else {
             double length = 0.0D;
-            GeoCoordinates prev = (GeoCoordinates)path.get(0);
+            GeoCoordinates prev = path.get(0);
             double prevLat = Math.toRadians(prev.latitude);
             double prevLng = Math.toRadians(prev.longitude);
 
             double lng;
-            for(Iterator var8 = path.iterator(); var8.hasNext(); prevLng = lng) {
-                GeoCoordinates point = (GeoCoordinates)var8.next();
+            for (Iterator<GeoCoordinates> var8 = path.iterator(); var8.hasNext(); prevLng = lng) {
+                GeoCoordinates point = var8.next();
                 double lat = Math.toRadians(point.latitude);
                 lng = Math.toRadians(point.longitude);
                 length += distanceRadians(prevLat, prevLng, lat, lng);
@@ -135,13 +135,13 @@ public class SphericalUtil {
             return 0.0D;
         } else {
             double total = 0.0D;
-            GeoCoordinates prev = (GeoCoordinates)path.get(size - 1);
+            GeoCoordinates prev = path.get(size - 1);
             double prevTanLat = Math.tan((1.5707963267948966D - Math.toRadians(prev.latitude)) / 2.0D);
             double prevLng = Math.toRadians(prev.longitude);
 
             double lng;
-            for(Iterator var11 = path.iterator(); var11.hasNext(); prevLng = lng) {
-                GeoCoordinates point = (GeoCoordinates)var11.next();
+            for (Iterator<GeoCoordinates> var11 = path.iterator(); var11.hasNext(); prevLng = lng) {
+                GeoCoordinates point = var11.next();
                 double tanLat = Math.tan((1.5707963267948966D - Math.toRadians(point.latitude)) / 2.0D);
                 lng = Math.toRadians(point.longitude);
                 total += polarTriangleArea(tanLat, lng, prevTanLat, prevLng);

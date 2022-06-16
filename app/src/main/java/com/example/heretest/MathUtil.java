@@ -7,7 +7,7 @@ class MathUtil {
     }
 
     static double clamp(double x, double low, double high) {
-        return x < low ? low : (x > high ? high : x);
+        return x < low ? low : (Math.min(x, high));
     }
 
     static double wrap(double n, double min, double max) {

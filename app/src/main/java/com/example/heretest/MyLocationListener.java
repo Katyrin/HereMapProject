@@ -11,14 +11,15 @@ class MyLocationListener implements LocationListener {
 
     double longitudeMyLoc;
     double latitudeMyLoc;
+
     @Override
     public void onLocationChanged(Location loc) {
         longitudeMyLoc = loc.getLongitude();
         latitudeMyLoc = loc.getLatitude();
 
-        String longitude = "Longitude: " +loc.getLongitude();
+        String longitude = "Longitude: " + loc.getLongitude();
         Log.v(TAG, longitude);
-        String latitude = "Latitude: " +loc.getLatitude();
+        String latitude = "Latitude: " + loc.getLatitude();
         Log.v(TAG, latitude);
 
     }

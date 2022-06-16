@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class HoursNSK {
-   private long STROKE_COLOR = 0x00000000;
+    private final long STROKE_COLOR = 0x00000000;
     ArrayList<GeoCoordinates> arrHour00 = new ArrayList<>();
     ArrayList<GeoCoordinates> arrHour05l = new ArrayList<>();
     ArrayList<GeoCoordinates> arrHour05r = new ArrayList<>();
@@ -24,7 +24,7 @@ class HoursNSK {
     ArrayList<GeoCoordinates> arrHour25l = new ArrayList<>();
     ArrayList<GeoCoordinates> arrHour25r = new ArrayList<>();
 
-     MapPolygon hour00() {
+    MapPolygon hour00() {
 
         arrHour00.add(new GeoCoordinates(54.933332, 82.813875)); //выезд на ордынку
         arrHour00.add(new GeoCoordinates(54.964867, 82.816803)); //остановка Склады толмачевское шоссе
@@ -55,12 +55,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x2081C784, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour05l() {
+    MapPolygon hour05l() {
 
         arrHour05l.add(new GeoCoordinates(54.898916, 82.989170)); //Юный Ленинец
         arrHour05l.add(new GeoCoordinates(54.901661, 82.826933)); //учхоз
@@ -92,12 +92,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x20ffff00, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour05r() {
+    MapPolygon hour05r() {
 
         arrHour05r.add(new GeoCoordinates(55.074383, 82.797638)); //Приобский Обь
         arrHour05r.add(new GeoCoordinates(55.137035, 82.866303)); //мочище сп
@@ -130,12 +130,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x20ffff00, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour10l() {
+    MapPolygon hour10l() {
 
         arrHour10l.add(new GeoCoordinates(54.823260, 82.968632)); //ОбьГЭС Обское водохранилище
         arrHour10l.add(new GeoCoordinates(54.837658, 82.921374)); //Голубой залив
@@ -163,12 +163,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x20F9A825, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour10r() {
+    MapPolygon hour10r() {
 
         arrHour10r.add(new GeoCoordinates(55.114732, 82.792211)); //за Кудряшевским Обь
         arrHour10r.add(new GeoCoordinates(55.215486, 82.905836)); //Красный яр
@@ -198,12 +198,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x20F9A825, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour15l() {
+    MapPolygon hour15l() {
 
         arrHour15l.add(new GeoCoordinates(54.803784, 82.924132)); //Обь сЛенинское
         arrHour15l.add(new GeoCoordinates(54.816035, 82.632523)); //Ярково
@@ -228,12 +228,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x20ff0000, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour15r() {
+    MapPolygon hour15r() {
 
         arrHour15r.add(new GeoCoordinates(55.138187, 82.813270)); //СНТ Энергоноситель Обь
         arrHour15r.add(new GeoCoordinates(55.192117, 82.875411)); //Мост северный объезд!
@@ -268,12 +268,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x20ff0000, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour20l() {
+    MapPolygon hour20l() {
 
         arrHour20l.add(new GeoCoordinates(54.723400, 82.835442)); //Обь Боровое!
         arrHour20l.add(new GeoCoordinates(54.752741, 82.521342)); //поворот на Боровое
@@ -300,12 +300,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x208b00ff, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour20r() {
+    MapPolygon hour20r() {
 
         arrHour20r.add(new GeoCoordinates(55.263848, 82.854742)); //Обь за сКубовая
         arrHour20r.add(new GeoCoordinates(55.304254, 82.875364)); //Обь Зеленый мыс!
@@ -337,12 +337,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x208b00ff, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour25l() {
+    MapPolygon hour25l() {
 
         arrHour25l.add(new GeoCoordinates(54.585110, 82.518495)); //Обь Новопичугово!
         arrHour25l.add(new GeoCoordinates(54.603164, 82.303042)); //ВерхИрмень
@@ -369,12 +369,12 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x2000BFFF, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-     MapPolygon hour25r() {
+    MapPolygon hour25r() {
 
         arrHour25r.add(new GeoCoordinates(55.384517, 82.809885)); //Обь Скала
         arrHour25r.add(new GeoCoordinates(55.442983, 82.928675)); //Обь Юрт-Ора
@@ -403,21 +403,21 @@ class HoursNSK {
         }
         MapPolygonStyle mapPolygonStyle = new MapPolygonStyle();
         mapPolygonStyle.setFillColor(0x2000BFFF, PixelFormat.ARGB_8888);
-        mapPolygonStyle.setStrokeColor(STROKE_COLOR,PixelFormat.ARGB_8888);
+        mapPolygonStyle.setStrokeColor(STROKE_COLOR, PixelFormat.ARGB_8888);
         mapPolygonStyle.setStrokeWidth(1);
         return new MapPolygon(geoPolygon, mapPolygonStyle);
     }
 
-   List<GeoCoordinates> allHours() {
-      List<GeoCoordinates> allHours = new ArrayList<>();
-      allHours.add(new GeoCoordinates(54.603164, 82.303042)); //ВерхИрмень
-      allHours.add(new GeoCoordinates(55.079760, 81.985960)); //Лесная поляна
-      allHours.add(new GeoCoordinates(55.495499, 82.758542)); //Вьюны
-      allHours.add(new GeoCoordinates(55.476854, 83.792476)); //СтанционноОяшенский
-      allHours.add(new GeoCoordinates(55.113966, 83.835581)); //Горный
-      allHours.add(new GeoCoordinates(54.974014, 83.917674)); //за Устькаменкой
-      allHours.add(new GeoCoordinates(54.534943, 83.331483)); //Евсино
+    List<GeoCoordinates> allHours() {
+        List<GeoCoordinates> allHours = new ArrayList<>();
+        allHours.add(new GeoCoordinates(54.603164, 82.303042)); //ВерхИрмень
+        allHours.add(new GeoCoordinates(55.079760, 81.985960)); //Лесная поляна
+        allHours.add(new GeoCoordinates(55.495499, 82.758542)); //Вьюны
+        allHours.add(new GeoCoordinates(55.476854, 83.792476)); //СтанционноОяшенский
+        allHours.add(new GeoCoordinates(55.113966, 83.835581)); //Горный
+        allHours.add(new GeoCoordinates(54.974014, 83.917674)); //за Устькаменкой
+        allHours.add(new GeoCoordinates(54.534943, 83.331483)); //Евсино
 
-      return allHours;
-   }
+        return allHours;
+    }
 }

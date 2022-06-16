@@ -59,14 +59,14 @@ public class PolyUtil {
         } else {
             double lat3 = Math.toRadians(latitude);
             double lng3 = Math.toRadians(longitude);
-            GeoCoordinates prev = (GeoCoordinates)polygon.get(size - 1);
+            GeoCoordinates prev = polygon.get(size - 1);
             double lat1 = Math.toRadians(prev.latitude);
             double lng1 = Math.toRadians(prev.longitude);
             int nIntersect = 0;
 
             double lng2;
-            for(Iterator var17 = polygon.iterator(); var17.hasNext(); lng1 = lng2) {
-                GeoCoordinates point2 = (GeoCoordinates)var17.next();
+            for (Iterator<GeoCoordinates> var17 = polygon.iterator(); var17.hasNext(); lng1 = lng2) {
+                GeoCoordinates point2 = var17.next();
                 double dLng3 = MathUtil.wrap(lng3 - lng1, -3.141592653589793D, 3.141592653589793D);
                 if (lat3 == lat1 && dLng3 == 0.0D) {
                     return true;
@@ -110,14 +110,14 @@ public class PolyUtil {
             double havTolerance = MathUtil.hav(tolerance);
             double lat3 = Math.toRadians(point.latitude);
             double lng3 = Math.toRadians(point.longitude);
-            GeoCoordinates prev = (GeoCoordinates)poly.get(closed ? size - 1 : 0);
+            GeoCoordinates prev = poly.get(closed ? size - 1 : 0);
             double lat1 = Math.toRadians(prev.latitude);
             double lng1 = Math.toRadians(prev.longitude);
             double lat2;
             double y1;
             if (geodesic) {
-                for(Iterator var20 = poly.iterator(); var20.hasNext(); lng1 = y1) {
-                    GeoCoordinates point2 = (GeoCoordinates)var20.next();
+                for (Iterator<GeoCoordinates> var20 = poly.iterator(); var20.hasNext(); lng1 = y1) {
+                    GeoCoordinates point2 = var20.next();
                     lat2 = Math.toRadians(point2.latitude);
                     y1 = Math.toRadians(point2.longitude);
                     if (isOnSegmentGC(lat1, lng1, lat2, y1, lat3, lng3, havTolerance)) {
@@ -134,8 +134,8 @@ public class PolyUtil {
                 double[] xTry = new double[3];
 
                 double y2;
-                for(Iterator var29 = poly.iterator(); var29.hasNext(); y1 = y2) {
-                    GeoCoordinates point2 = (GeoCoordinates)var29.next();
+                for (Iterator<GeoCoordinates> var29 = poly.iterator(); var29.hasNext(); y1 = y2) {
+                    GeoCoordinates point2 = var29.next();
                     lat2 = Math.toRadians(point2.latitude);
                     y2 = MathUtil.mercator(lat2);
                     double lng2 = Math.toRadians(point2.longitude);
@@ -145,11 +145,9 @@ public class PolyUtil {
                         xTry[0] = x3Base;
                         xTry[1] = x3Base + 6.283185307179586D;
                         xTry[2] = x3Base - 6.283185307179586D;
-                        double[] var41 = xTry;
                         int var42 = xTry.length;
 
-                        for(int var43 = 0; var43 < var42; ++var43) {
-                            double x3 = var41[var43];
+                        for (double x3 : xTry) {
                             double dy = y2 - y1;
                             double len2 = x2 * x2 + dy * dy;
                             double t = len2 <= 0.0D ? 0.0D : MathUtil.clamp((x3 * x2 + (y3 - y1) * dy) / len2, 0.0D, 1.0D);
@@ -234,7 +232,7 @@ public class PolyUtil {
             GeoCoordinates lastPoint = null;
             if (closedPolygon) {
                 double OFFSET = 1.0E-11D;
-                lastPoint = (GeoCoordinates)poly.get(poly.size() - 1);
+                lastPoint = poly.get(poly.size() - 1);
                 poly.remove(poly.size() - 1);
                 poly.add(new GeoCoordinates(lastPoint.latitude + 1.0E-11D, lastPoint.longitude + 1.0E-11D));
             }
@@ -250,12 +248,12 @@ public class PolyUtil {
                 int[] stackVal = new int[]{0, n - 1};
                 stack.push(stackVal);
 
-                while(stack.size() > 0) {
-                    int[] current = (int[])stack.pop();
+                while (stack.size() > 0) {
+                    int[] current = (int[]) stack.pop();
                     double maxDist = 0.0D;
 
-                    for(idx = current[0] + 1; idx < current[1]; ++idx) {
-                        dist = distanceToLine((GeoCoordinates)poly.get(idx), (GeoCoordinates)poly.get(current[0]), (GeoCoordinates)poly.get(current[1]));
+                    for (idx = current[0] + 1; idx < current[1]; ++idx) {
+                        dist = distanceToLine(poly.get(idx), poly.get(current[0]), poly.get(current[1]));
                         if (dist > maxDist) {
                             maxDist = dist;
                             maxIdx = idx;
@@ -280,8 +278,8 @@ public class PolyUtil {
             idx = 0;
             ArrayList<GeoCoordinates> simplifiedLine = new ArrayList();
 
-            for(Iterator var20 = poly.iterator(); var20.hasNext(); ++idx) {
-                GeoCoordinates l = (GeoCoordinates)var20.next();
+            for (Iterator<GeoCoordinates> var20 = poly.iterator(); var20.hasNext(); ++idx) {
+                GeoCoordinates l = var20.next();
                 if (dists[idx] != 0.0D) {
                     simplifiedLine.add(l);
                 }
@@ -292,8 +290,8 @@ public class PolyUtil {
     }
 
     public static boolean isClosedPolygon(List<GeoCoordinates> poly) {
-        GeoCoordinates firstPoint = (GeoCoordinates)poly.get(0);
-        GeoCoordinates lastPoint = (GeoCoordinates)poly.get(poly.size() - 1);
+        GeoCoordinates firstPoint = poly.get(0);
+        GeoCoordinates lastPoint = poly.get(poly.size() - 1);
         return firstPoint.equals(lastPoint);
     }
 
@@ -329,7 +327,7 @@ public class PolyUtil {
         int lat = 0;
         int lng = 0;
 
-        while(index < len) {
+        while (index < len) {
             int result = 1;
             int shift = 0;
 
@@ -338,7 +336,7 @@ public class PolyUtil {
                 b = encodedPath.charAt(index++) - 63 - 1;
                 result += b << shift;
                 shift += 5;
-            } while(b >= 31);
+            } while (b >= 31);
 
             lat += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
             result = 1;
@@ -348,10 +346,10 @@ public class PolyUtil {
                 b = encodedPath.charAt(index++) - 63 - 1;
                 result += b << shift;
                 shift += 5;
-            } while(b >= 31);
+            } while (b >= 31);
 
             lng += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
-            path.add(new GeoCoordinates((double)lat * 1.0E-5D, (double)lng * 1.0E-5D));
+            path.add(new GeoCoordinates((double) lat * 1.0E-5D, (double) lng * 1.0E-5D));
         }
 
         return path;
@@ -363,8 +361,8 @@ public class PolyUtil {
         StringBuffer result = new StringBuffer();
 
         long lng;
-        for(Iterator var6 = path.iterator(); var6.hasNext(); lastLng = lng) {
-            GeoCoordinates point = (GeoCoordinates)var6.next();
+        for (Iterator<GeoCoordinates> var6 = path.iterator(); var6.hasNext(); lastLng = lng) {
+            GeoCoordinates point = var6.next();
             long lat = Math.round(point.latitude * 100000.0D);
             lng = Math.round(point.longitude * 100000.0D);
             long dLat = lat - lastLat;
@@ -378,10 +376,10 @@ public class PolyUtil {
     }
 
     private static void encode(long v, StringBuffer result) {
-        for(v = v < 0L ? ~(v << 1) : v << 1; v >= 32L; v >>= 5) {
-            result.append(Character.toChars((int)((32L | v & 31L) + 63L)));
+        for (v = v < 0L ? ~(v << 1) : v << 1; v >= 32L; v >>= 5) {
+            result.append(Character.toChars((int) ((32L | v & 31L) + 63L)));
         }
 
-        result.append(Character.toChars((int)(v + 63L)));
+        result.append(Character.toChars((int) (v + 63L)));
     }
 }

@@ -27,6 +27,7 @@ public class PermissionsRequestor {
 
     public interface ResultListener {
         void permissionsGranted();
+
         void permissionsDenied();
     }
 

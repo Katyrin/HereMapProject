@@ -1,5 +1,6 @@
 package com.example.heretest;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -44,14 +45,17 @@ public class MainActivity extends AppCompatActivity {
     private PermissionsRequestor permissionsRequestor;
     private MapViewLite mapView;
     private HereMap hereMap;
+    @SuppressLint("StaticFieldLeak")
     static EditText nameAddress;
     private String addressStr;
+    @SuppressLint("StaticFieldLeak")
     static EditText nameAddress2;
     private String addressStr2;
-    private Truck truck = new Truck();
+    private final Truck truck = new Truck();
     private AdView adView;
     private static final String AD_UNIT_ID = "ca-app-pub-3678485328369090/8334203630";
     static Dialog dialog;
+    @SuppressLint("StaticFieldLeak")
     static TextView textRout;
     static String carName;
     private Dialog dialog2;
@@ -138,69 +142,57 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.rout_dialog_layout);
         Button shareBtn = dialog.findViewById(R.id.shareBtn);
         textRout = dialog.findViewById(R.id.textView);
-        shareBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                dialog2.show();
-                captureScreen();
-            }
+        shareBtn.setOnClickListener(v -> {
+            dialog.cancel();
+            dialog2.show();
+            captureScreen();
         });
         dialog2 = new Dialog(MainActivity.this);
         dialog2.setContentView(R.layout.rout_dialog_layout2);
         Button shareBtn2 = dialog2.findViewById(R.id.shareBtn2);
         textViewTime = dialog2.findViewById(R.id.textViewTime2);
         textViewAdditions = dialog2.findViewById(R.id.textViewAdditions);
-        shareBtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        shareBtn2.setOnClickListener(v -> {
+            textViewTimeStr = String.valueOf(textViewTime.getText());
+            textViewAdditionsStr = String.valueOf(textViewAdditions.getText());
+            if (textViewTimeStr.equals("")) {
+                Toast.makeText(getApplicationContext(), "Введи время погрузки", Toast.LENGTH_SHORT).show();
+            } else {
                 textViewTimeStr = String.valueOf(textViewTime.getText());
                 textViewAdditionsStr = String.valueOf(textViewAdditions.getText());
-                if (textViewTimeStr.equals(new String(""))) {
-                    Toast.makeText(getApplicationContext(), "Введи время погрузки", Toast.LENGTH_SHORT).show();
-                } else {
-                    textViewTimeStr = String.valueOf(textViewTime.getText());
-                    textViewAdditionsStr = String.valueOf(textViewAdditions.getText());
-                    String shareText = textViewTimeStr + " нужен автомобиль: " + carName + "\nАдрес погрузки: " + HereMap.addressStart +
-                            "\nАдрес выгрузки: " + HereMap.addressDestination + HereMap.shareTextRout + "\n" + textViewAdditionsStr;
+                String shareText = textViewTimeStr + " нужен автомобиль: " + carName + "\nАдрес погрузки: " + HereMap.addressStart +
+                        "\nАдрес выгрузки: " + HereMap.addressDestination + HereMap.shareTextRout + "\n" + textViewAdditionsStr;
 
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(url));
-                    sendIntent.setPackage("org.telegram.messenger");
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-                    sendIntent.setType("image/png");
-                    startActivity(Intent.createChooser(sendIntent, "Share with Friends"));
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(url));
+                sendIntent.setPackage("org.telegram.messenger");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                sendIntent.setType("image/png");
+                startActivity(Intent.createChooser(sendIntent, "Share with Friends"));
 
-                    dialog2.cancel();
-                    textViewTime.setText(null);
-                    textViewAdditions.setText(null);
-                }
+                dialog2.cancel();
+                textViewTime.setText(null);
+                textViewAdditions.setText(null);
             }
         });
         // long tap - choice points dialog
         pointDialog = new Dialog(MainActivity.this);
         pointDialog.setContentView(R.layout.choice_point);
         Button startBtn = pointDialog.findViewById(R.id.startBtn);
-        startBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choicePointBoolean = 0;
-                pointDialog.cancel();
-                hereMap.addPoiMapMarkerStart(HereMap.geoCoordinatesPoint);
-                hereMap.getAddressForCoordinates(HereMap.geoCoordinatesPoint);
-            }
+        startBtn.setOnClickListener(v -> {
+            choicePointBoolean = 0;
+            pointDialog.cancel();
+            hereMap.addPoiMapMarkerStart(HereMap.geoCoordinatesPoint);
+            hereMap.getAddressForCoordinates(HereMap.geoCoordinatesPoint);
         });
         Button destinationBtn = pointDialog.findViewById(R.id.destinationBtn);
-        destinationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choicePointBoolean = 1;
-                pointDialog.cancel();
-                hereMap.addPoiMapMarkerDestination(HereMap.geoCoordinatesPoint);
-                hereMap.getAddressForCoordinates(HereMap.geoCoordinatesPoint);
-            }
+        destinationBtn.setOnClickListener(v -> {
+            choicePointBoolean = 1;
+            pointDialog.cancel();
+            hereMap.addPoiMapMarkerDestination(HereMap.geoCoordinatesPoint);
+            hereMap.getAddressForCoordinates(HereMap.geoCoordinatesPoint);
         });
     }
 
@@ -209,18 +201,18 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.trucks, menu);
 
-        MenuItem night = menu.add(0,NIGHT,0,"Ночной тариф");
+        MenuItem night = menu.add(0, NIGHT, 0, "Ночной тариф");
         night.setCheckable(true);
-        MenuItem cold = menu.add(0,COLD,0,"Морозный тариф");
+        MenuItem cold = menu.add(0, COLD, 0, "Морозный тариф");
         cold.setCheckable(true);
-        MenuItem apparel = menu.add(0,APPAREL,0,"Аппарель");
+        MenuItem apparel = menu.add(0, APPAREL, 0, "Аппарель");
         apparel.setCheckable(true);
         return true;
     }
 
     private void handleAndroidPermissions() {
         permissionsRequestor = new PermissionsRequestor(this);
-        permissionsRequestor.request(new PermissionsRequestor.ResultListener(){
+        permissionsRequestor.request(new PermissionsRequestor.ResultListener() {
 
             @Override
             public void permissionsGranted() {
@@ -236,24 +228,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         permissionsRequestor.onRequestPermissionsResult(requestCode, grantResults);
     }
 
-private void loadMapScene() {
-    // Load a scene from the SDK to render the map with a map style.
-    MapSceneConfig mapSceneConfig = new MapSceneConfig();
-    mapSceneConfig.mainLanguageCode = LanguageCode.RU_RU;
-    mapSceneConfig.fallbackLanguageCode = LanguageCode.RU_RU;
+    private void loadMapScene() {
+        // Load a scene from the SDK to render the map with a map style.
+        MapSceneConfig mapSceneConfig = new MapSceneConfig();
+        mapSceneConfig.mainLanguageCode = LanguageCode.RU_RU;
+        mapSceneConfig.fallbackLanguageCode = LanguageCode.RU_RU;
 
-    mapView.getMapScene().loadScene(MapStyle.NORMAL_DAY, mapSceneConfig, errorCode -> {
-        if (errorCode == null) {
-            hereMap = new HereMap(MainActivity.this, mapView);
-            hereMap.showMapPolygon();
-        } else {
-            Log.d(TAG, "onLoadScene failed: " + errorCode.toString());
-        }
-    });
-}
+        mapView.getMapScene().loadScene(MapStyle.NORMAL_DAY, mapSceneConfig, errorCode -> {
+            if (errorCode == null) {
+                hereMap = new HereMap(MainActivity.this, mapView);
+                hereMap.showMapPolygon();
+            } else {
+                Log.d(TAG, "onLoadScene failed: " + errorCode.toString());
+            }
+        });
+    }
 
     public void searchExampleButtonClicked(View view, String s) {
         hereMap.onSearchButtonClicked(s);
@@ -262,25 +255,26 @@ private void loadMapScene() {
     public void geocodeAnAddressButtonClicked(View view, String s) {
         hereMap.onGeocodeButtonClicked(s);
     }
+
     public void geocodeAnAddressButtonClicked2(View view, String s2) {
         hereMap.onGeocodeButtonClicked2(s2);
     }
 
     //нижние три функции относятся к классу RoutingExample
     public void addRouteButtonClicked(View view) {
-           if (HereMap.startGeoCoordinates == null && HereMap.destinationGeoCoordinates == null) {
-               Toast.makeText(getApplicationContext(), "Введите адрес погрузки и адрес выгрузки чтобы построить маршрут", Toast.LENGTH_SHORT).show();
-               return;
-           }
-           if (HereMap.startGeoCoordinates == null) {
-               Toast.makeText(getApplicationContext(), "Введите адрес погрузки чтобы построить маршрут", Toast.LENGTH_SHORT).show();
-               return;
-           }
-           if (HereMap.destinationGeoCoordinates == null) {
-               Toast.makeText(getApplicationContext(), "Введите адрес выгрузки чтобы построить маршрут", Toast.LENGTH_SHORT).show();
-           } else {
-               hereMap.addRoute();
-           }
+        if (HereMap.startGeoCoordinates == null && HereMap.destinationGeoCoordinates == null) {
+            Toast.makeText(getApplicationContext(), "Введите адрес погрузки и адрес выгрузки чтобы построить маршрут", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (HereMap.startGeoCoordinates == null) {
+            Toast.makeText(getApplicationContext(), "Введите адрес погрузки чтобы построить маршрут", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (HereMap.destinationGeoCoordinates == null) {
+            Toast.makeText(getApplicationContext(), "Введите адрес выгрузки чтобы построить маршрут", Toast.LENGTH_SHORT).show();
+        } else {
+            hereMap.addRoute();
+        }
 
 
     }
@@ -325,212 +319,204 @@ private void loadMapScene() {
         mapView.onDestroy();
     }
 
-//menu**********************************************************
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id==R.id.gazelle_tent){
+        if (id == R.id.gazelle_tent) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleTent();
-        }else if (id==R.id.gazelle_thermos){
+        } else if (id == R.id.gazelle_thermos) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleThermos();
-        }else if (id==R.id.gazelle_height){
+        } else if (id == R.id.gazelle_height) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleHeight();
-        }else if (id==R.id.gazelle_board){
+        } else if (id == R.id.gazelle_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleBoard();
-        }else if (id==R.id.gazelle_farmer){
+        } else if (id == R.id.gazelle_farmer) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleFarmer();
-        }else if (id==R.id.gazelle_ref){
+        } else if (id == R.id.gazelle_ref) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleRef();
-        }else if (id==R.id.gazelle_pyramid){
+        } else if (id == R.id.gazelle_pyramid) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazellePyramid();
-        }else if (id==R.id.gazelle_towing){
+        } else if (id == R.id.gazelle_towing) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleTrowing();
-        }
-        else if (id==R.id.gazelle_long_original){
+        } else if (id == R.id.gazelle_long_original) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongOriginal();
-        }else if (id==R.id.gazelle_long_board){
+        } else if (id == R.id.gazelle_long_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongBoard();
-        }else if (id==R.id.gazelle_long_farmer){
+        } else if (id == R.id.gazelle_long_farmer) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongFarmer();
-        }else if (id==R.id.gazelle_long_ref){
+        } else if (id == R.id.gazelle_long_ref) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongRef();
-        }else if (id==R.id.gazelle_long_pyramid){
+        } else if (id == R.id.gazelle_long_pyramid) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongPyramid();
-        }else if (id==R.id.gazelle_long_height){
+        } else if (id == R.id.gazelle_long_height) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongHaight();
-        }else if (id==R.id.gazelle_long_long){
+        } else if (id == R.id.gazelle_long_long) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickGazelleLongLong();
-        }
-        else if (id==R.id.ton_2_original){
+        } else if (id == R.id.ton_2_original) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Original();
-        }else if (id==R.id.ton_2_board){
+        } else if (id == R.id.ton_2_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Board();
-        }else if (id==R.id.ton_2_farmer){
+        } else if (id == R.id.ton_2_farmer) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Farmer();
-        }else if (id==R.id.ton_2_ref){
+        } else if (id == R.id.ton_2_ref) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Ref();
-        }else if (id==R.id.ton_2_pyramid){
+        } else if (id == R.id.ton_2_pyramid) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Pyramid();
-        }else if (id==R.id.ton_2_height){
+        } else if (id == R.id.ton_2_height) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Haight();
-        }else if (id==R.id.ton_2_long){
+        } else if (id == R.id.ton_2_long) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon2Long();
-        }
-        else if (id==R.id.ton_3_original_mini){
+        } else if (id == R.id.ton_3_original_mini) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3OriginalMini();
-        }else if (id==R.id.ton_3_original_maxi){
+        } else if (id == R.id.ton_3_original_maxi) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3OriginalMaxi();
-        }else if (id==R.id.ton_3_board){
+        } else if (id == R.id.ton_3_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3Board();
-        }else if (id==R.id.ton_3_farmer){
+        } else if (id == R.id.ton_3_farmer) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3Farmer();
-        }else if (id==R.id.ton_3_ref){
+        } else if (id == R.id.ton_3_ref) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3Ref();
-        }else if (id==R.id.ton_3_multi_ref){
+        } else if (id == R.id.ton_3_multi_ref) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3MultiRef();
-        }else if (id==R.id.ton_3_pyramid){
+        } else if (id == R.id.ton_3_pyramid) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3Pyramid();
-        }else if (id==R.id.ton_3_long){
+        } else if (id == R.id.ton_3_long) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon3Long();
-        }
-        else if (id==R.id.ton_5_mini){
+        } else if (id == R.id.ton_5_mini) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon5Mini();
-        }else if (id==R.id.ton_5_medium){
+        } else if (id == R.id.ton_5_medium) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon5Medium();
-        }else if (id==R.id.ton_5_maxi){
+        } else if (id == R.id.ton_5_maxi) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon5Maxi();
-        }else if (id==R.id.ton_5_board){
+        } else if (id == R.id.ton_5_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon5Board();
-        }else if (id==R.id.ton_5_ref_mini){
+        } else if (id == R.id.ton_5_ref_mini) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon5RefMini();
-        }else if (id==R.id.ton_5_ref_maxi){
+        } else if (id == R.id.ton_5_ref_maxi) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon5RefMaxi();
-        }
-        else if (id==R.id.ton_7_min){
+        } else if (id == R.id.ton_7_min) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon7Min();
-        }else if (id==R.id.ton_7_max){
+        } else if (id == R.id.ton_7_max) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon7Max();
-        }else if (id==R.id.ton_7_board){
+        } else if (id == R.id.ton_7_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon7Board();
-        }else if (id==R.id.ton_7_ref_min){
+        } else if (id == R.id.ton_7_ref_min) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon7RefMin();
-        }else if (id==R.id.ton_7_ref_max){
+        } else if (id == R.id.ton_7_ref_max) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon7RefMax();
-        }
-        else if (id==R.id.ton_10_min){
+        } else if (id == R.id.ton_10_min) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon10Min();
-        }else if (id==R.id.ton_10_max){
+        } else if (id == R.id.ton_10_max) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon10Max();
-        }else if (id==R.id.ton_10_board){
+        } else if (id == R.id.ton_10_board) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon10Board();
-        }else if (id==R.id.ton_10_ref_min){
+        } else if (id == R.id.ton_10_ref_min) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon10RefMin();
-        }else if (id==R.id.ton_10_ref_max){
+        } else if (id == R.id.ton_10_ref_max) {
             carName = item.getTitle().toString();
             setTitle(carName);
             truck.onClickTon10RefMax();
         }
 
-        if (id==NIGHT){
+        if (id == NIGHT) {
             item.setChecked(!item.isChecked());
-            if (item.isChecked()){
+            if (item.isChecked()) {
                 Truck.nightPrice = 100;
-            }
-            else{
+            } else {
                 Truck.nightPrice = 0;
             }
         }
-        if (id==COLD) {
+        if (id == COLD) {
             item.setChecked(!item.isChecked());
             if (item.isChecked()) {
                 Truck.coldPrice = 100;
@@ -542,7 +528,7 @@ private void loadMapScene() {
                 Truck.coldKm = 0;
             }
         }
-        if (id==APPAREL) {
+        if (id == APPAREL) {
             item.setChecked(!item.isChecked());
             if (item.isChecked()) {
                 Truck.apparelPrice = 100;
@@ -553,10 +539,10 @@ private void loadMapScene() {
                 Truck.apparelPrice = 0;
                 Truck.apparelKm25 = 0;
                 Truck.apparelKm = 0;
-                withApparel="";
+                withApparel = "";
             }
         }
-        if (HereMap.destinationGeoCoordinates!=null && HereMap.startGeoCoordinates!=null){
+        if (HereMap.destinationGeoCoordinates != null && HereMap.startGeoCoordinates != null) {
             hereMap.invisibleAddRoute();
         }
 
@@ -594,6 +580,6 @@ private void loadMapScene() {
             Context context = getApplicationContext();
             url = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "screenshot", null);
         };
-        mapView.captureScreenshot( mcs);
+        mapView.captureScreenshot(mcs);
     }
 }

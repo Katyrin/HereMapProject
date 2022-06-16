@@ -6,7 +6,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.here.sdk.core.Anchor2D;
 import com.here.sdk.core.CustomMetadataValue;
@@ -32,8 +31,6 @@ import com.here.sdk.mapviewlite.MapPolylineStyle;
 import com.here.sdk.mapviewlite.MapScene;
 import com.here.sdk.mapviewlite.MapViewLite;
 import com.here.sdk.mapviewlite.Padding;
-import com.here.sdk.mapviewlite.PickMapItemsCallback;
-import com.here.sdk.mapviewlite.PickMapItemsResult;
 import com.here.sdk.mapviewlite.PixelFormat;
 import com.here.sdk.routing.Maneuver;
 import com.here.sdk.routing.ManeuverAction;
@@ -53,7 +50,6 @@ import com.here.sdk.search.ReverseGeocodingEngine;
 import com.here.sdk.search.ReverseGeocodingOptions;
 import com.here.sdk.search.SearchCategory;
 import com.here.sdk.search.SearchEngine;
-import com.here.sdk.search.SearchError;
 import com.here.sdk.search.SearchOptions;
 import com.here.sdk.search.SearchResult;
 
@@ -65,30 +61,30 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-class HereMap{
+class HereMap {
 
     private static final String LOG_TAG = HereMap.class.getName();
 
-    private Context context;
-    private MapViewLite mapView;
-    private List<MapMarker> mapMarkerList = new ArrayList<>();
-    private SearchEngine searchEngine;
-    private AutosuggestEngine autosuggestEngine;
-    private GeocodingEngine geocodingEngine;
-    private GeocodingEngine geocodingEngine2;
-    private ReverseGeocodingEngine reverseGeocodingEngine;
-    private Truck truck = new Truck();
+    private final Context context;
+    private final MapViewLite mapView;
+    private final List<MapMarker> mapMarkerList = new ArrayList<>();
+    private final SearchEngine searchEngine;
+    private final AutosuggestEngine autosuggestEngine;
+    private final GeocodingEngine geocodingEngine;
+    private final GeocodingEngine geocodingEngine2;
+    private final ReverseGeocodingEngine reverseGeocodingEngine;
+    private final Truck truck = new Truck();
     private static double hourDestination;
     private static double hourStart;
     private static double hourDestination25;
     private static double hourStart25;
     private double fixRoutePriceStart;
     private double fixRoutePriceDestination;
-    private Locality25 locality25 = new Locality25();
-    private HoursNSK hoursNSK = new HoursNSK();
+    private final Locality25 locality25 = new Locality25();
+    private final HoursNSK hoursNSK = new HoursNSK();
     private boolean cityCenterStart;
     private boolean cityCenterDestination;
-    private GeoCoordinates cityCenterGeo = new GeoCoordinates(55.030132, 82.918927);
+    private final GeoCoordinates cityCenterGeo = new GeoCoordinates(55.030132, 82.918927);
     private double fixedAmountRoutePrices;
     private double lengthFirstHalf;
     private double lengthSecondHalf;
@@ -97,13 +93,13 @@ class HereMap{
     static String addressDestination;
     private String detailsRout;
     private final List<MapPolyline> mapPolylines = new ArrayList<>();
-    private RoutingEngine routingEngine;
+    private final RoutingEngine routingEngine;
     static GeoCoordinates startGeoCoordinates;
     static GeoCoordinates destinationGeoCoordinates;
     static GeoCoordinates geoCoordinatesPoint;
-    private MapScene mapScene;
+    private final MapScene mapScene;
     private MapPolygon mapPolygon;
-    private HashSet<Double> hourRoutePointsList = new HashSet<>();
+    private final HashSet<Double> hourRoutePointsList = new HashSet<>();
     private boolean notCityStart;
     private boolean notCityDestination;
 
@@ -166,13 +162,14 @@ class HereMap{
         // Search for the location that belongs to an address and show it on the map.
         geocodeAnAddress(str);
     }
+
     void onGeocodeButtonClicked2(String str2) {
         // Search for the location that belongs to an address and show it on the map.
         geocodeAnAddress2(str2);
     }
 
     private void searchExample(String s) {
-        Toast.makeText(context,"Searching in viewport: " + s, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Searching in viewport: " + s, Toast.LENGTH_LONG).show();
         searchInViewport(s);
     }
 
@@ -180,6 +177,7 @@ class HereMap{
         // Set map to expected location.
         geocodeAddressInViewport(s);
     }
+
     private void geocodeAnAddress2(String s2) {
         // Set map to expected location.
         geocodeAddressInViewport2(s2);
@@ -206,62 +204,57 @@ class HereMap{
         ReverseGeocodingOptions reverseGeocodingOptions = new ReverseGeocodingOptions(LanguageCode.RU_RU);
 
         reverseGeocodingEngine.searchAddress(
-                geoCoordinates, reverseGeocodingOptions, new ReverseGeocodingEngine.Callback() {
-                    @Override
-                    public void onSearchCompleted(@Nullable SearchError searchError, @Nullable Address address) {
-                        if (MainActivity.choicePointBoolean ==0){
-                            startGeoCoordinates = geoCoordinates;
-                            assert address != null;
-                            searchPointInZones(address.addressText);
-                            addressStart = address.addressText;
-                            MainActivity.nameAddress.setText(address.addressText);
-                        }else if (MainActivity.choicePointBoolean ==1){
-                            destinationGeoCoordinates = geoCoordinates;
-                            assert address != null;
-                            searchPointInZones2(address.addressText);
-                            MainActivity.nameAddress2.setText(address.addressText);
-                            addressDestination = address.addressText;
-                        }
-                        if (searchError != null) {
-                            showDialog("Reverse geocoding", "Error: " + searchError.toString());
-                        }
-//                        showDialog("Reverse geocoded address:", address.addressText);
+                geoCoordinates, reverseGeocodingOptions, (searchError, address) -> {
+                    if (MainActivity.choicePointBoolean == 0) {
+                        startGeoCoordinates = geoCoordinates;
+                        assert address != null;
+                        searchPointInZones(address.addressText);
+                        addressStart = address.addressText;
+                        MainActivity.nameAddress.setText(address.addressText);
+                    } else if (MainActivity.choicePointBoolean == 1) {
+                        destinationGeoCoordinates = geoCoordinates;
+                        assert address != null;
+                        searchPointInZones2(address.addressText);
+                        MainActivity.nameAddress2.setText(address.addressText);
+                        addressDestination = address.addressText;
                     }
+                    if (searchError != null) {
+                        showDialog("Reverse geocoding", "Error: " + searchError);
+                    }
+//                        showDialog("Reverse geocoded address:", address.addressText);
                 });
     }
 
     private void pickMapMarker(final Point2D point2D) {
         float radiusInPixel = 2;
-        mapView.pickMapItems(point2D, radiusInPixel, new PickMapItemsCallback() {
-            @Override
-            public void onMapItemsPicked(@Nullable PickMapItemsResult pickMapItemsResult) {
-                if (pickMapItemsResult == null) {
+        mapView.pickMapItems(point2D, radiusInPixel, pickMapItemsResult -> {
+            if (pickMapItemsResult == null) {
+                return;
+            }
+
+            MapMarker topmostMapMarker = pickMapItemsResult.getTopmostMarker();
+            if (topmostMapMarker == null) {
+                return;
+            }
+
+            Metadata metadata = topmostMapMarker.getMetadata();
+            if (metadata != null) {
+                CustomMetadataValue customMetadataValue = metadata.getCustomValue("key_search_result");
+                if (customMetadataValue != null) {
+                    SearchResultMetadata searchResultMetadata = (SearchResultMetadata) customMetadataValue;
+                    String title = searchResultMetadata.searchResult.title;
+                    String vicinity = searchResultMetadata.searchResult.vicinity;
+                    SearchCategory category = searchResultMetadata.searchResult.category;
+                    showDialog("Picked Search Result",
+                            title + ", " + vicinity + ". Category: " + category.localizedName);
                     return;
                 }
+            }
 
-                MapMarker topmostMapMarker = pickMapItemsResult.getTopmostMarker();
-                if (topmostMapMarker == null) {
-                    return;
-                }
-
-                Metadata metadata = topmostMapMarker.getMetadata();
-                if (metadata != null) {
-                    CustomMetadataValue customMetadataValue = metadata.getCustomValue("key_search_result");
-                    if (customMetadataValue != null) {
-                        SearchResultMetadata searchResultMetadata = (SearchResultMetadata) customMetadataValue;
-                        String title = searchResultMetadata.searchResult.title;
-                        String vicinity = searchResultMetadata.searchResult.vicinity;
-                        SearchCategory category = searchResultMetadata.searchResult.category;
-                        showDialog("Picked Search Result",
-                                title + ", " + vicinity + ". Category: " + category.localizedName);
-                        return;
-                    }
-                }
-
-                showDialog("Picked Map Marker",
-                        "Geographic coordinates: " +
-                                topmostMapMarker.getCoordinates().latitude + ", " +
-                                topmostMapMarker.getCoordinates().longitude);
+            showDialog("Picked Map Marker",
+                    "Geographic coordinates: " +
+                            topmostMapMarker.getCoordinates().latitude + ", " +
+                            topmostMapMarker.getCoordinates().longitude);
 
 //                if (mapMarkerStart!=null){
 //                    clearMarker();
@@ -273,7 +266,6 @@ class HereMap{
 //                    addPoiMapMarkerDestination(destinationGeoCoordinates);
 //                }
 
-            }
         });
     }
 
@@ -287,29 +279,26 @@ class HereMap{
                 maxSearchResults);
 
         GeoBox viewportGeoBox = mapView.getCamera().getBoundingRect();
-        searchEngine.search(queryString, viewportGeoBox, searchOptions, new SearchEngine.Callback() {
-                    @Override
-                    public void onSearchCompleted(@Nullable SearchError searchError, @Nullable List<SearchResult> list) {
-                        if (searchError != null) {
-                            showDialog("Search", "Error: " + searchError.toString());
-                            return;
-                        }
+        searchEngine.search(queryString, viewportGeoBox, searchOptions, (searchError, list) -> {
+            if (searchError != null) {
+                showDialog("Search", "Error: " + searchError);
+                return;
+            }
 
-                        assert list != null;
-                        if (list.isEmpty()) {
-                            showDialog("Search", "No results found");
-                        } else {
-                            showDialog("Search", "Results: " + list.size());
-                        }
+            assert list != null;
+            if (list.isEmpty()) {
+                showDialog("Search", "No results found");
+            } else {
+                showDialog("Search", "Results: " + list.size());
+            }
 
-                        // Add new marker for each search result on map.
-                        for (SearchResult searchResult : list) {
-                            Metadata metadata = new Metadata();
-                            metadata.setCustomValue("key_search_result", new SearchResultMetadata(searchResult));
-                            addPoiMapMarker(searchResult.coordinates, metadata);
-                        }
-                    }
-                });
+            // Add new marker for each search result on map.
+            for (SearchResult searchResult : list) {
+                Metadata metadata = new Metadata();
+                metadata.setCustomValue("key_search_result", new SearchResultMetadata(searchResult));
+                addPoiMapMarker(searchResult.coordinates, metadata);
+            }
+        });
     }
 
     private static class SearchResultMetadata implements CustomMetadataValue {
@@ -327,25 +316,22 @@ class HereMap{
         }
     }
 
-    private final AutosuggestEngine.Callback autosuggestCallback = new AutosuggestEngine.Callback() {
-        @Override
-        public void onSearchCompleted(@Nullable SearchError searchError, @Nullable List<AutosuggestResult> list) {
-            if (searchError != null) {
-                Log.d(LOG_TAG, "Autosuggest Error: " + searchError.name());
-                return;
-            }
+    private final AutosuggestEngine.Callback autosuggestCallback = (searchError, list) -> {
+        if (searchError != null) {
+            Log.d(LOG_TAG, "Autosuggest Error: " + searchError.name());
+            return;
+        }
 
-            assert list != null;
-            if (list.isEmpty()) {
-                Log.d(LOG_TAG, "Autosuggest: No results found");
-            } else {
-                Log.d(LOG_TAG, "Autosuggest results: " + list.size());
-            }
+        assert list != null;
+        if (list.isEmpty()) {
+            Log.d(LOG_TAG, "Autosuggest: No results found");
+        } else {
+            Log.d(LOG_TAG, "Autosuggest results: " + list.size());
+        }
 
-            for (AutosuggestResult autosuggestResult : list) {
-                Log.d(LOG_TAG, "Autosuggest result: " + autosuggestResult.title +
-                        "Highlighted: " + autosuggestResult.highlightedTitle);
-            }
+        for (AutosuggestResult autosuggestResult : list) {
+            Log.d(LOG_TAG, "Autosuggest result: " + autosuggestResult.title +
+                    "Highlighted: " + autosuggestResult.highlightedTitle);
         }
     };
 
@@ -362,135 +348,132 @@ class HereMap{
         // Simulate a user typing a search term.
         autosuggestEngine.suggest("п",
                 centerGeoCoordinates,
-                        autosuggestOptions,
-                        autosuggestCallback);
+                autosuggestOptions,
+                autosuggestCallback);
 
         autosuggestEngine.suggest("пи",
                 centerGeoCoordinates,
-                        autosuggestOptions,
-                        autosuggestCallback);
+                autosuggestOptions,
+                autosuggestCallback);
 
         autosuggestEngine.suggest("пиц",
                 centerGeoCoordinates,
-                        autosuggestOptions,
-                        autosuggestCallback);
+                autosuggestOptions,
+                autosuggestCallback);
 
         autosuggestEngine.suggest(s,
                 centerGeoCoordinates,
-                        autosuggestOptions,
-                        autosuggestCallback);
+                autosuggestOptions,
+                autosuggestCallback);
     }
 
-    private void  geocodeAddressInViewport(String queryString) {
+    private void geocodeAddressInViewport(String queryString) {
         addressStart = queryString;
         clearMarker();
         GeoCircle geoCircle = new GeoCircle(new GeoCoordinates(54.999310, 82.930359), 50000);
         long maxResultCount = 1;
         GeocodingOptions geocodingOptions = new GeocodingOptions(
                 LanguageCode.RU_RU, (int) maxResultCount);
-        geocodingEngine.searchLocations(queryString, geoCircle, geocodingOptions, new GeocodingEngine.Callback() {
-                    @Override
-                    public void onSearchCompleted(@Nullable SearchError searchError,
-                                                  @Nullable List<GeocodingResult> list) {
-                        if (searchError != null) {
-                            showDialog("Geocoding", "Error: " + searchError.toString());
-                            return;
-                        }
-                        assert list != null;
-                        if (list.isEmpty()) {
-                            showDialog("Geocoding", "No geocoding results found.");
-                            return;
-                        }
-                        for (GeocodingResult geocodingResult : list) {
-                            GeoCoordinates geoCoordinates = geocodingResult.coordinates;
-                            Address address = geocodingResult.address;
-                            if (address != null) {
-                                String locationDetails = address.addressText
-                                        + ". GeoCoordinates: " + geoCoordinates.latitude
-                                        + ", " + geoCoordinates.longitude;
-                                Log.d(LOG_TAG, "GeocodingResult: " + locationDetails);
-                            }
-                            if (list.size()==1){
-                                addPoiMapMarkerStart(geoCoordinates);
-                                //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
-                                startGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
-                            }else if (list.size()>1){
-                                addPoiMapMarkerStart(geoCoordinates);
-                                //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
-                                startGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
-        
-                            }
-                            searchPointInZones(queryString);
-                        }
-                        //showDialog("Geocoding result", "Size: " + list.size());
-                    }
-                });
+        geocodingEngine.searchLocations(queryString, geoCircle, geocodingOptions, (searchError, list) -> {
+            if (searchError != null) {
+                showDialog("Geocoding", "Error: " + searchError);
+                return;
+            }
+            assert list != null;
+            if (list.isEmpty()) {
+                showDialog("Geocoding", "No geocoding results found.");
+                return;
+            }
+            for (GeocodingResult geocodingResult : list) {
+                GeoCoordinates geoCoordinates = geocodingResult.coordinates;
+                Address address = geocodingResult.address;
+                if (address != null) {
+                    String locationDetails = address.addressText
+                            + ". GeoCoordinates: " + geoCoordinates.latitude
+                            + ", " + geoCoordinates.longitude;
+                    Log.d(LOG_TAG, "GeocodingResult: " + locationDetails);
+                }
+                if (list.size() == 1) {
+                    addPoiMapMarkerStart(geoCoordinates);
+                    //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
+                    startGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
+                } else if (list.size() > 1) {
+                    addPoiMapMarkerStart(geoCoordinates);
+                    //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
+                    startGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
+
+                }
+                searchPointInZones(queryString);
+            }
+            //showDialog("Geocoding result", "Size: " + list.size());
+        });
     }
-    private void searchPointInZones(String queryString){
+
+    private void searchPointInZones(String queryString) {
         hourRoutePointsList.clear();
         routHalfFirst();
-        hourStart=0;
-        hourStart25=0;
-        fixRoutePriceStart=0;
-        if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour00, true)){
-            hourStart=0;
-            hourStart25=0;
+        hourStart = 0;
+        hourStart25 = 0;
+        fixRoutePriceStart = 0;
+        if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour00, true)) {
+            hourStart = 0;
+            hourStart25 = 0;
             cityCenterStart = true;
             notCityStart = false;
-            Toast.makeText(context,"Загрузка по адресу: "+queryString+"\nНаходится в черте города", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour05l, true)||
+            Toast.makeText(context, "Загрузка по адресу: " + queryString + "\nНаходится в черте города", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour05l, true) ||
                 PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour05r, true)) {
-            hourStart=0.5;
-            hourStart25=0;
+            hourStart = 0.5;
+            hourStart25 = 0;
             cityCenterStart = false;
             notCityStart = false;
-            Toast.makeText(context, "Загрузка по адресу: "+queryString+"\nНаходится в получасовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour10l, true)||
+            Toast.makeText(context, "Загрузка по адресу: " + queryString + "\nНаходится в получасовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour10l, true) ||
                 PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour10r, true)) {
-            hourStart=1;
-            hourStart25=0;
+            hourStart = 1;
+            hourStart25 = 0;
             cityCenterStart = false;
             notCityStart = false;
-            Toast.makeText(context, "Загрузка по адресу: "+queryString+"\nНаходится в часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour15l, true)||
+            Toast.makeText(context, "Загрузка по адресу: " + queryString + "\nНаходится в часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour15l, true) ||
                 PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour15r, true)) {
-            hourStart=1.5;
-            hourStart25=0;
+            hourStart = 1.5;
+            hourStart25 = 0;
             cityCenterStart = false;
             notCityStart = false;
-            Toast.makeText(context, "Загрузка по адресу: "+queryString+"\nНаходится в 1,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour20l, true)||
+            Toast.makeText(context, "Загрузка по адресу: " + queryString + "\nНаходится в 1,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour20l, true) ||
                 PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour20r, true)) {
-            hourStart=2;
-            hourStart25=0;
+            hourStart = 2;
+            hourStart25 = 0;
             cityCenterStart = false;
             notCityStart = false;
-            Toast.makeText(context, "Загрузка по адресу: "+queryString+"\nНаходится в 2 часовой зоне отдаления ", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour25l, true)||
+            Toast.makeText(context, "Загрузка по адресу: " + queryString + "\nНаходится в 2 часовой зоне отдаления ", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour25l, true) ||
                 PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.arrHour25r, true)) {
-            hourStart25=2.5;
+            hourStart25 = 2.5;
             cityCenterStart = false;
             notCityStart = false;
-            Toast.makeText(context, "Загрузка по адресу: "+queryString+"\nНаходится в 2,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else{
-            hourStart=0;
-            hourStart25=0;
+            Toast.makeText(context, "Загрузка по адресу: " + queryString + "\nНаходится в 2,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else {
+            hourStart = 0;
+            hourStart25 = 0;
             cityCenterStart = false;
-            notCityStart=true;
+            notCityStart = true;
         }
-        for (Map.Entry<ArrayList<GeoCoordinates>, Integer> entry:locality25.setFixKmArr().entrySet()){
+        for (Map.Entry<ArrayList<GeoCoordinates>, Integer> entry : locality25.setFixKmArr().entrySet()) {
             if (PolyUtil.containsLocation(startGeoCoordinates, entry.getKey(), true)) {
-                fixRoutePriceStart=entry.getValue();
+                fixRoutePriceStart = entry.getValue();
                 //Toast.makeText(context, entry.getValue().toString(), Toast.LENGTH_LONG).show();
                 routHalfFirst();
-                if (destinationGeoCoordinates!=null && startGeoCoordinates!=null){
+                if (destinationGeoCoordinates != null && startGeoCoordinates != null) {
                     invisibleAddRoute();
                 }
                 return;
             }
         }
         routHalfFirst();
-        if (destinationGeoCoordinates!=null && startGeoCoordinates!=null){
+        if (destinationGeoCoordinates != null && startGeoCoordinates != null) {
             invisibleAddRoute();
         }
     }
@@ -502,128 +485,125 @@ class HereMap{
         long maxResultCount = 1;
         GeocodingOptions geocodingOptions = new GeocodingOptions(
                 LanguageCode.RU_RU, (int) maxResultCount);
-        geocodingEngine2.searchLocations(queryString2, geoCircle, geocodingOptions, new GeocodingEngine.Callback() {
-                    @Override
-                    public void onSearchCompleted(@Nullable SearchError searchError,
-                                                  @Nullable List<GeocodingResult> list) {
-                        if (searchError != null) {
-                            showDialog("Geocoding", "Error: " + searchError.toString());
-                            return;
-                        }
-                        assert list != null;
-                        if (list.isEmpty()) {
-                            showDialog("Geocoding", "No geocoding results found.");
-                            return;
-                        }
-                        for (GeocodingResult geocodingResult : list) {
-                            GeoCoordinates geoCoordinates = geocodingResult.coordinates;
-                            Address address = geocodingResult.address;
-                            if (address != null) {
-                                String locationDetails = address.addressText
-                                        + ". GeoCoordinates: " + geoCoordinates.latitude
-                                        + ", " + geoCoordinates.longitude;
-                                Log.d(LOG_TAG, "GeocodingResult: " + locationDetails);
-        //                        addPoiMapMarkerDestination(geoCoordinates);
-        //                        //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
-        //                        destinationGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
-                            }
-                            if (list.size()==1){
-                                addPoiMapMarkerDestination(geoCoordinates);
-                                //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
-                                destinationGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
-                            }else if (list.size()>1){
-                                addPoiMapMarkerDestination(geoCoordinates);
-                                //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
-                                destinationGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
+        geocodingEngine2.searchLocations(queryString2, geoCircle, geocodingOptions, (searchError, list) -> {
+            if (searchError != null) {
+                showDialog("Geocoding", "Error: " + searchError);
+                return;
+            }
+            assert list != null;
+            if (list.isEmpty()) {
+                showDialog("Geocoding", "No geocoding results found.");
+                return;
+            }
+            for (GeocodingResult geocodingResult : list) {
+                GeoCoordinates geoCoordinates = geocodingResult.coordinates;
+                Address address = geocodingResult.address;
+                if (address != null) {
+                    String locationDetails = address.addressText
+                            + ". GeoCoordinates: " + geoCoordinates.latitude
+                            + ", " + geoCoordinates.longitude;
+                    Log.d(LOG_TAG, "GeocodingResult: " + locationDetails);
+//                        addPoiMapMarkerDestination(geoCoordinates);
+//                        //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
+//                        destinationGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
+                }
+                if (list.size() == 1) {
+                    addPoiMapMarkerDestination(geoCoordinates);
+                    //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
+                    destinationGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
+                } else if (list.size() > 1) {
+                    addPoiMapMarkerDestination(geoCoordinates);
+                    //camera.setTarget(new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude));
+                    destinationGeoCoordinates = new GeoCoordinates(geoCoordinates.latitude, geoCoordinates.longitude);
 
-                            }
-                            searchPointInZones2(queryString2);
-                        }
-                        //showDialog("Geocoding result", "Size: " + list.size());
-                    }
-                });
+                }
+                searchPointInZones2(queryString2);
+            }
+            //showDialog("Geocoding result", "Size: " + list.size());
+        });
     }
-    private void searchPointInZones2(String queryString2){
+
+    private void searchPointInZones2(String queryString2) {
         hourRoutePointsList.clear();
         routHalfSecond();
-        hourDestination=0;
-        hourDestination25=0;
-        fixRoutePriceDestination=0;
-        if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour00, true)){
-            hourDestination=0;
-            hourDestination25=0;
+        hourDestination = 0;
+        hourDestination25 = 0;
+        fixRoutePriceDestination = 0;
+        if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour00, true)) {
+            hourDestination = 0;
+            hourDestination25 = 0;
             cityCenterDestination = true;
             notCityDestination = false;
-            Toast.makeText(context,"Выгрузка по адресу: "+queryString2+"\nНаходится в черте города", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour05l, true)||
+            Toast.makeText(context, "Выгрузка по адресу: " + queryString2 + "\nНаходится в черте города", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour05l, true) ||
                 PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour05r, true)) {
-            hourDestination=0.5;
-            hourDestination25=0;
+            hourDestination = 0.5;
+            hourDestination25 = 0;
             cityCenterDestination = false;
             notCityDestination = false;
-            Toast.makeText(context, "Выгрузка по адресу: "+queryString2+"\nНаходится в получасовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour10l, true)||
+            Toast.makeText(context, "Выгрузка по адресу: " + queryString2 + "\nНаходится в получасовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour10l, true) ||
                 PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour10r, true)) {
-            hourDestination=1;
-            hourDestination25=0;
+            hourDestination = 1;
+            hourDestination25 = 0;
             cityCenterDestination = false;
             notCityDestination = false;
-            Toast.makeText(context, "Выгрузка по адресу: "+queryString2+"\nНаходится в часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour15l, true)||
+            Toast.makeText(context, "Выгрузка по адресу: " + queryString2 + "\nНаходится в часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour15l, true) ||
                 PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour15r, true)) {
-            hourDestination=1.5;
-            hourDestination25=0;
+            hourDestination = 1.5;
+            hourDestination25 = 0;
             cityCenterDestination = false;
             notCityDestination = false;
-            Toast.makeText(context, "Выгрузка по адресу: "+queryString2+"\nНаходится в 1,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour20l, true)||
+            Toast.makeText(context, "Выгрузка по адресу: " + queryString2 + "\nНаходится в 1,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour20l, true) ||
                 PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour20r, true)) {
-            hourDestination=2;
-            hourDestination25=0;
+            hourDestination = 2;
+            hourDestination25 = 0;
             cityCenterDestination = false;
             notCityDestination = false;
-            Toast.makeText(context, "Выгрузка по адресу: "+queryString2+"\nНаходится в 2 часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour25l, true)||
+            Toast.makeText(context, "Выгрузка по адресу: " + queryString2 + "\nНаходится в 2 часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else if (PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour25l, true) ||
                 PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.arrHour25r, true)) {
-            hourDestination25=2.5;
+            hourDestination25 = 2.5;
             cityCenterDestination = false;
             notCityDestination = false;
-            Toast.makeText(context, "Выгрузка по адресу: "+queryString2+"\nНаходится в 2,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
-        }else{
-            hourDestination=0;
-            hourDestination25=0;
+            Toast.makeText(context, "Выгрузка по адресу: " + queryString2 + "\nНаходится в 2,5 часовой зоне отдаления", Toast.LENGTH_LONG).show();
+        } else {
+            hourDestination = 0;
+            hourDestination25 = 0;
             cityCenterDestination = false;
             notCityDestination = true;
         }
-        for (Map.Entry<ArrayList<GeoCoordinates>, Integer> entry:locality25.setFixKmArr().entrySet()){
+        for (Map.Entry<ArrayList<GeoCoordinates>, Integer> entry : locality25.setFixKmArr().entrySet()) {
             assert destinationGeoCoordinates != null;
             if (PolyUtil.containsLocation(destinationGeoCoordinates, entry.getKey(), true)) {
-                fixRoutePriceDestination=entry.getValue();
+                fixRoutePriceDestination = entry.getValue();
                 //Toast.makeText(context, entry.getValue().toString(), Toast.LENGTH_LONG).show();
                 routHalfSecond();
-                if (destinationGeoCoordinates!=null && startGeoCoordinates!=null){
+                if (destinationGeoCoordinates != null && startGeoCoordinates != null) {
                     invisibleAddRoute();
                 }
             }
         }
         routHalfSecond();
-        if (destinationGeoCoordinates!=null && startGeoCoordinates!=null){
+        if (destinationGeoCoordinates != null && startGeoCoordinates != null) {
             invisibleAddRoute();
         }
     }
 
     //Этот код делает логику подсчета стоимости маршрута
-    private String routCountPrice(Route route){
+    private String routCountPrice(Route route) {
         CameraUpdate cameraUpdate = mapView.getCamera().calculateEnclosingCameraUpdate(
                 route.getBoundingBox(),
                 new Padding(10, 10, 10, 10));
         mapView.getCamera().updateCamera(cameraUpdate);
-        double allHour =hourStart+hourDestination+hourStart25+hourDestination25;
-        double start = hourStart+hourStart25;
-        double destination = hourDestination+hourDestination25;
+        double allHour = hourStart + hourDestination + hourStart25 + hourDestination25;
+        double start = hourStart + hourStart25;
+        double destination = hourDestination + hourDestination25;
         double lengthInMeters = route.getLengthInMeters();
-        double kmAB = Math.ceil(lengthInMeters/5000)*10;
-        fixedAmountRoutePrices = fixRoutePriceStart+fixRoutePriceDestination;
+        double kmAB = Math.ceil(lengthInMeters / 5000) * 10;
+        fixedAmountRoutePrices = fixRoutePriceStart + fixRoutePriceDestination;
         if (PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.allHours(), true) &&
                 PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.allHours(), true)) {
             //если нет фиксированого километража нигде или нет фикс.км на старте + финиш не в городе и наоборот
@@ -686,7 +666,7 @@ class HereMap{
                                             truck.count25Second(allHour, lengthSecondHalf)) + " рублей";
                         }
                     }
-                } else if ((hourStart25 == 0 && hourDestination25 == 0) || ((hourStart25 != 0 || hourDestination25 != 0) && Truck.km25 == 0)) {
+                } else {
                     if (hourRoutePointsList.contains(0.0)) {
                         //Toast.makeText(context, "Это 4.1 version (более 2т и просто почасовка обязательно центр)", Toast.LENGTH_LONG).show();
                         return truck.countStr(allHour) + "\nИтого: " +
@@ -702,10 +682,6 @@ class HereMap{
                                     truck.count((start / 2 + destination)) + " рублей";
                         }
                     }
-                } else {
-                    //Toast.makeText(context, "Это 4.4 version (более 2т и просто почасовка обязательно центр)", Toast.LENGTH_LONG).show();
-                    return truck.countStr(allHour) + "\nИтого: " +
-                            truck.count(allHour) + " рублей";
                 }
             } else {
                 if (hourStart25 != 0 && hourDestination25 == 0) {
@@ -718,11 +694,11 @@ class HereMap{
                             truck.count25(allHour, fixedAmountRoutePrices) + " рублей";
                 }
             }
-        }else if (lengthSecondHalf<300.0 && lengthFirstHalf<300.0){
-            if (fixedAmountRoutePrices==0)
-                fixedAmountRoutePrices=kmAB;
+        } else if (lengthSecondHalf < 300.0 && lengthFirstHalf < 300.0) {
+            if (fixedAmountRoutePrices == 0)
+                fixedAmountRoutePrices = kmAB;
             if (((hourDestination25 != 0 && Truck.km25 != 0) || (hourStart25 != 0 && Truck.km25 != 0))
-                    && (hourStart+hourDestination)==0){
+                    && (hourStart + hourDestination) == 0) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 7.1 version (менее 2 т и обе точки в зоне 2.5 или до 150км через город)", Toast.LENGTH_LONG).show();
                     return truck.count25Str(allHour, lengthFirstHalf) +
@@ -736,59 +712,58 @@ class HereMap{
                             "\nИтого: " + (truck.count25(allHour, (lengthFirstHalf + lengthSecondHalf) / 2)
                             + truck.count25Second(allHour, fixedAmountRoutePrices / 2)) + " рублей";
                 }
-            }else if ((hourDestination25 != 0 && Truck.km25 == 0) || (hourDestination != 0)){
+            } else if ((hourDestination25 != 0 && Truck.km25 == 0) || (hourDestination != 0)) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 8.1 version (все загрузка 150км через город + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.count150KmStr(lengthFirstHalf) +
-                            truck.countSecondStr((hourDestination+hourDestination25)) + "\nИтого: " +
-                            (truck.count150Km(lengthFirstHalf) + truck.countSecond((hourDestination+hourDestination25)))
+                            truck.countSecondStr((hourDestination + hourDestination25)) + "\nИтого: " +
+                            (truck.count150Km(lengthFirstHalf) + truck.countSecond((hourDestination + hourDestination25)))
                             + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 8.2 version (все загрузка 150км + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.count150KmStr(lengthFirstHalf) +
-                            truck.countSecondStr((hourDestination+hourDestination25)/2) +
+                            truck.countSecondStr((hourDestination + hourDestination25) / 2) +
                             "\nИтого: " + (truck.count150Km(lengthFirstHalf) +
-                            truck.countSecond((hourDestination+hourDestination25)/2)) + " рублей";
+                            truck.countSecond((hourDestination + hourDestination25) / 2)) + " рублей";
                 }
-            }else if ((hourStart25 != 0 && Truck.km25 == 0) || (hourStart != 0)){
+            } else if ((hourStart25 != 0 && Truck.km25 == 0) || (hourStart != 0)) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 9.1 version (все выгрузка 150км через город + отдаленка)", Toast.LENGTH_LONG).show();
-                    return truck.count150KmStr(lengthSecondHalf) + truck.countSecondStr((hourStart+hourStart25)) +
-                            "\nИтого: " + (truck.count150Km(lengthSecondHalf) + truck.countSecond((hourStart+hourStart25)))
+                    return truck.count150KmStr(lengthSecondHalf) + truck.countSecondStr((hourStart + hourStart25)) +
+                            "\nИтого: " + (truck.count150Km(lengthSecondHalf) + truck.countSecond((hourStart + hourStart25)))
                             + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 9.2 version (все выгрузка 150км + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.count150KmStr(lengthSecondHalf) +
-                            truck.countSecondStr((hourStart+hourStart25)/2) +
+                            truck.countSecondStr((hourStart + hourStart25) / 2) +
                             "\nИтого: " + (truck.count150Km(lengthSecondHalf) +
-                            truck.countSecond((hourStart+hourStart25)/2)) + " рублей";
+                            truck.countSecond((hourStart + hourStart25) / 2)) + " рублей";
                 }
-            }else {
+            } else {
                 if (hourRoutePointsList.contains(2.0)) {
                     //Toast.makeText(context, "Это 10.1 version (Все от 75до 150км с центром города)", Toast.LENGTH_LONG).show();
                     return truck.count150KmStr(fixedAmountRoutePrices) + "\nИтого: " +
                             truck.count150Km(fixedAmountRoutePrices) + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 10.2 version (Все точки от 75до 150км)", Toast.LENGTH_LONG).show();
-                    return truck.count150KmStr((lengthFirstHalf + lengthSecondHalf)/2)
-                            + truck.count150KmSecondStr(kmAB/2) +
-                            "\nИтого: " + (truck.count150Km((lengthFirstHalf + lengthSecondHalf)/2)
-                            + truck.count150KmSecond(kmAB/2)) + " рублей";
+                    return truck.count150KmStr((lengthFirstHalf + lengthSecondHalf) / 2)
+                            + truck.count150KmSecondStr(kmAB / 2) +
+                            "\nИтого: " + (truck.count150Km((lengthFirstHalf + lengthSecondHalf) / 2)
+                            + truck.count150KmSecond(kmAB / 2)) + " рублей";
                 }
             }
-        }else if (((lengthSecondHalf<400.0 && lengthFirstHalf<400.0)&&lengthFirstHalf>=300.0)||
-                ((lengthSecondHalf<400.0 && lengthFirstHalf<400.0)&&lengthSecondHalf>=300.0)){
-            if (fixedAmountRoutePrices==0)
-                fixedAmountRoutePrices=kmAB;
+        } else if (lengthSecondHalf < 400.0 && lengthFirstHalf < 400.0 && lengthFirstHalf >= 300.0 || lengthSecondHalf < 400.0 && lengthFirstHalf < 400.0) {
+            if (fixedAmountRoutePrices == 0)
+                fixedAmountRoutePrices = kmAB;
             if (((hourDestination25 != 0 && Truck.km25 != 0) || (hourStart25 != 0 && Truck.km25 != 0))
-                    && (hourStart+hourDestination)==0){
+                    && (hourStart + hourDestination) == 0) {
                 if (hourRoutePointsList.contains(0.0)) {
-                    if (hourStart25!=0){
+                    if (hourStart25 != 0) {
                         //Toast.makeText(context, "Это 11.1 version (менее 2 т и загрузка в зоне 2.5 или до 200км через город)", Toast.LENGTH_LONG).show();
                         return truck.count150KmStr(lengthFirstHalf) + truck.count200KmStr(lengthSecondHalf) +
                                 "\nИтого: " + (truck.count150Km(lengthFirstHalf) + truck.count200Km(lengthSecondHalf))
                                 + " рублей";
-                    }else {
+                    } else {
                         //Toast.makeText(context, "Это 11.2 version (менее 2 т и выгрузка в зоне 2.5 или до 200км через город)", Toast.LENGTH_LONG).show();
                         return truck.count200KmStr(lengthFirstHalf) + truck.count150KmStr(lengthSecondHalf) +
                                 "\nИтого: " + (truck.count200Km(lengthFirstHalf) + truck.count150Km(lengthSecondHalf))
@@ -801,38 +776,38 @@ class HereMap{
                             (truck.count200Km((lengthFirstHalf + lengthSecondHalf) / 2)
                                     + truck.count200Km(fixedAmountRoutePrices / 2)) + " рублей";
                 }
-            }else if ((hourDestination25 != 0 && Truck.km25 == 0) || (hourDestination != 0)){
+            } else if ((hourDestination25 != 0 && Truck.km25 == 0) || (hourDestination != 0)) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 12.1 version (все загрузка 200км через город + отдаленка)", Toast.LENGTH_LONG).show();
-                    return truck.count200KmStr(lengthFirstHalf) + truck.countSecondStr((hourDestination+hourDestination25))
+                    return truck.count200KmStr(lengthFirstHalf) + truck.countSecondStr((hourDestination + hourDestination25))
                             + "\nИтого: " + (truck.count200Km(lengthFirstHalf) +
-                            truck.countSecond((hourDestination+hourDestination25))) + " рублей";
-                }else {
+                            truck.countSecond((hourDestination + hourDestination25))) + " рублей";
+                } else {
                     //Toast.makeText(context, "Это 12.2 version (все загрузка 200км + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.count200KmStr(lengthFirstHalf) +
-                            truck.countSecondStr((hourDestination+hourDestination25)/2) + "\nИтого: " +
+                            truck.countSecondStr((hourDestination + hourDestination25) / 2) + "\nИтого: " +
                             (truck.count200Km(lengthFirstHalf) +
-                                    truck.countSecond((hourDestination+hourDestination25)/2)) + " рублей";
+                                    truck.countSecond((hourDestination + hourDestination25) / 2)) + " рублей";
                 }
-            }else if ((hourStart25 != 0 && Truck.km25 == 0) || (hourStart != 0)){
+            } else if ((hourStart25 != 0 && Truck.km25 == 0) || (hourStart != 0)) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 13.1 version (все выгрузка 200км через город + отдаленка)", Toast.LENGTH_LONG).show();
-                    return truck.count200KmStr(lengthSecondHalf) + truck.countSecondStr((hourStart+hourStart25)) +
-                            "\nИтого: " + (truck.count200Km(lengthSecondHalf) + truck.countSecond((hourStart+hourStart25)))
+                    return truck.count200KmStr(lengthSecondHalf) + truck.countSecondStr((hourStart + hourStart25)) +
+                            "\nИтого: " + (truck.count200Km(lengthSecondHalf) + truck.countSecond((hourStart + hourStart25)))
                             + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 13.2 version (все выгрузка 200км + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.count200KmStr(lengthSecondHalf) +
-                            truck.countSecondStr((hourStart+hourStart25)/2) + "\nИтого: " +
-                            (truck.count200Km(lengthSecondHalf) + truck.countSecond((hourStart+hourStart25)/2))
+                            truck.countSecondStr((hourStart + hourStart25) / 2) + "\nИтого: " +
+                            (truck.count200Km(lengthSecondHalf) + truck.countSecond((hourStart + hourStart25) / 2))
                             + " рублей";
                 }
-            }else {
+            } else {
                 if (hourRoutePointsList.contains(2.0)) {
                     //Toast.makeText(context, "Это 14.1 version (Все от 150до 200км через город)", Toast.LENGTH_LONG).show();
                     return truck.count200KmStr(fixedAmountRoutePrices) +
                             "\nИтого: " + truck.count200Km(fixedAmountRoutePrices) + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 14.2 version (Все от 150до 200км без заезда в город)", Toast.LENGTH_LONG).show();
                     return truck.count200KmStr((lengthFirstHalf + lengthSecondHalf) / 2) +
                             truck.count150KmSecondStr(kmAB / 2) + "\nИтого: " +
@@ -840,18 +815,18 @@ class HereMap{
                                     truck.count150KmSecond(kmAB / 2)) + " рублей";
                 }
             }
-        }else {
-            if (fixedAmountRoutePrices==0)
-                fixedAmountRoutePrices=kmAB;
+        } else {
+            if (fixedAmountRoutePrices == 0)
+                fixedAmountRoutePrices = kmAB;
             if (((hourDestination25 != 0 && Truck.km25 != 0) || (hourStart25 != 0 && Truck.km25 != 0))
-                    && (hourStart+hourDestination)==0){
+                    && (hourStart + hourDestination) == 0) {
                 if (hourRoutePointsList.contains(0.0)) {
-                    if (hourStart25!=0){
+                    if (hourStart25 != 0) {
                         //Toast.makeText(context, "Это 15.1 version (менее 2 т и загрузка в зоне 2.5 или более 200км через город)", Toast.LENGTH_LONG).show();
                         return truck.count150KmStr(lengthFirstHalf) + truck.countAllKmStr(lengthSecondHalf) +
                                 "\nИтого: " + (truck.count150Km(lengthFirstHalf) + truck.countAllKm(lengthSecondHalf))
                                 + " рублей";
-                    }else {
+                    } else {
                         //Toast.makeText(context, "Это 15.2 version (менее 2 т и разгрузка в зоне 2.5 или более 200км через город)", Toast.LENGTH_LONG).show();
                         return truck.countAllKmStr(lengthFirstHalf) + truck.count150KmStr(lengthSecondHalf) +
                                 "\nИтого: " + (truck.countAllKm(lengthFirstHalf) + truck.count150Km(lengthSecondHalf))
@@ -864,39 +839,39 @@ class HereMap{
                             (truck.countAllKm((lengthFirstHalf + lengthSecondHalf) / 2) +
                                     truck.countAllKm(kmAB / 2)) + " рублей";
                 }
-            }else if ((hourDestination25 != 0 && Truck.km25 == 0) || (hourDestination != 0)){
+            } else if ((hourDestination25 != 0 && Truck.km25 == 0) || (hourDestination != 0)) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 16.1 version (все загрузка более 200км через город + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.countAllKmStr(lengthFirstHalf) +
-                            truck.countSecondStr((hourDestination+hourDestination25)) + "\nИтого: " +
-                            (truck.countAllKm(lengthFirstHalf) + truck.countSecond((hourDestination+hourDestination25)))
+                            truck.countSecondStr((hourDestination + hourDestination25)) + "\nИтого: " +
+                            (truck.countAllKm(lengthFirstHalf) + truck.countSecond((hourDestination + hourDestination25)))
                             + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 16.2 version (все загрузка более 200км + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.countAllKmStr(lengthFirstHalf) +
-                            truck.countSecondStr((hourDestination+hourDestination25)/2) +
+                            truck.countSecondStr((hourDestination + hourDestination25) / 2) +
                             "\nИтого: " + (truck.countAllKm(lengthFirstHalf) +
-                            truck.countSecond((hourDestination+hourDestination25)/2)) + " рублей";
+                            truck.countSecond((hourDestination + hourDestination25) / 2)) + " рублей";
                 }
-            }else if ((hourStart25 != 0 && Truck.km25 == 0) || (hourStart != 0)){
+            } else if ((hourStart25 != 0 && Truck.km25 == 0) || (hourStart != 0)) {
                 if (hourRoutePointsList.contains(0.0)) {
                     //Toast.makeText(context, "Это 17.1 version (все выгрузка более 200км через город + отдаленка)", Toast.LENGTH_LONG).show();
-                    return truck.countAllKmStr(lengthSecondHalf) + truck.countSecondStr((hourStart+hourStart25)) +
-                            "\nИтого: " + (truck.countAllKm(lengthSecondHalf) + truck.countSecond((hourStart+hourStart25)))
+                    return truck.countAllKmStr(lengthSecondHalf) + truck.countSecondStr((hourStart + hourStart25)) +
+                            "\nИтого: " + (truck.countAllKm(lengthSecondHalf) + truck.countSecond((hourStart + hourStart25)))
                             + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 17.2 version (все выгрузка более 200км + отдаленка)", Toast.LENGTH_LONG).show();
                     return truck.countAllKmStr(lengthSecondHalf) +
-                            truck.countSecondStr((hourStart+hourStart25)/2) + "\nИтого: " +
-                            (truck.countAllKm(lengthSecondHalf) + truck.countSecond((hourStart+hourStart25)/2))
+                            truck.countSecondStr((hourStart + hourStart25) / 2) + "\nИтого: " +
+                            (truck.countAllKm(lengthSecondHalf) + truck.countSecond((hourStart + hourStart25) / 2))
                             + " рублей";
                 }
-            }else {
+            } else {
                 if (hourRoutePointsList.contains(2.0)) {
                     //Toast.makeText(context, "Это 18.1 version (Все от 200км через город)", Toast.LENGTH_LONG).show();
                     return truck.countAllKmStr(lengthFirstHalf + lengthSecondHalf) + "\nИтого: " +
                             truck.countAllKm(lengthFirstHalf + lengthSecondHalf) + " рублей";
-                }else {
+                } else {
                     //Toast.makeText(context, "Это 18.2 version (Все от 200км без заезда в город)", Toast.LENGTH_LONG).show();
                     return truck.countAllKmStr((lengthFirstHalf + lengthSecondHalf) / 2) +
                             truck.count150KmSecondStr(kmAB / 2) + "\nИтого: " +
@@ -907,11 +882,12 @@ class HereMap{
         }
     }
 
-     void addPoiMapMarkerStart(GeoCoordinates geoCoordinates) {
-         MapMarker mapMarkerStart = createPoiMapMarker(geoCoordinates);
+    void addPoiMapMarkerStart(GeoCoordinates geoCoordinates) {
+        MapMarker mapMarkerStart = createPoiMapMarker(geoCoordinates);
         mapView.getMapScene().addMapMarker(mapMarkerStart);
         mapMarkerList.add(mapMarkerStart);
     }
+
     void addPoiMapMarkerDestination(GeoCoordinates geoCoordinates) {
         MapMarker mapMarkerDestination = createPoiMapMarker(geoCoordinates);
         mapView.getMapScene().addMapMarker(mapMarkerDestination);
@@ -955,14 +931,14 @@ class HereMap{
 
     //here plus class Routing************************************************************************
     //private final List<MapMarker> mapMarkerList = new ArrayList<>();
-    void invisibleAddRoute(){
+    void invisibleAddRoute() {
         hourRoutePointsList.clear();
 
         Waypoint startWaypoint = new Waypoint(startGeoCoordinates);
         Waypoint destinationWaypoint = new Waypoint(destinationGeoCoordinates);
         List<Waypoint> waypoints =
                 new ArrayList<>(Arrays.asList(startWaypoint, destinationWaypoint));
-        if (Truck.km25!=0){
+        if (Truck.km25 != 0) {
             routingEngine.calculateRoute(
                     waypoints,
                     new RoutingEngine.CarOptions(),
@@ -979,7 +955,7 @@ class HereMap{
                             showDialog("Error while calculating a route:", routingError.toString());
                         }
                     });
-        }else {
+        } else {
             routingEngine.calculateRoute(
                     waypoints,
                     new RoutingEngine.TruckOptions(),
@@ -1000,65 +976,66 @@ class HereMap{
 
 
     }
-//Этот код строит логику маршрута
+
+    //Этот код строит логику маршрута
     void addRoute() {
         clearMarker();
         clearWaypointMapMarker();
         clearRoute();
 
-        fixedAmountRoutePrices = fixRoutePriceStart+fixRoutePriceDestination;
+        fixedAmountRoutePrices = fixRoutePriceStart + fixRoutePriceDestination;
         // Когда финиш и старт не в городе и Когда старт или финиш в зоне 25 и Когда фиксированый общий километраж равен 0 и Когда не более 2т
         // или Когда фиксированный общий километраж не равен 0 и Когда старт и финиш в зоне 25 и Когда не более 2т
-        if (((!cityCenterDestination && !cityCenterStart &&(hourStart25!=0||hourDestination25!=0)&& Truck.km25 !=0)||
-                (fixedAmountRoutePrices!=0&&hourStart25!=0&&hourDestination25!=0&& Truck.km25 !=0))
-                && hourRoutePointsList.contains(0.0)){
-            if (hourStart25!=0&&hourDestination25==0){
+        if (((!cityCenterDestination && !cityCenterStart && (hourStart25 != 0 || hourDestination25 != 0) && Truck.km25 != 0) ||
+                (fixedAmountRoutePrices != 0 && hourStart25 != 0 && hourDestination25 != 0 && Truck.km25 != 0))
+                && hourRoutePointsList.contains(0.0)) {
+            if (hourStart25 != 0 && hourDestination25 == 0) {
                 //Toast.makeText(context, "Это 1 вариант", Toast.LENGTH_LONG).show();
                 routHalfFirst();
                 addWaypoints();
-            }else if (hourStart25==0&&hourDestination25!=0){
+            } else if (hourStart25 == 0) {
                 //Toast.makeText(context, "Это 2 вариант", Toast.LENGTH_LONG).show();
                 routHalfSecond();
                 addWaypoints();
-            }else if (hourStart25!=0&&hourDestination25!=0){
+            } else {
                 //Toast.makeText(context, "Это 3 вариант", Toast.LENGTH_LONG).show();
                 routHalfFirst();
                 routHalfSecond();
                 fixedAmountRoutePrices = lengthFirstHalf + lengthSecondHalf;
                 addWaypoints();
             }
-        }else if ((notCityStart || notCityDestination) && !cityCenterDestination && !cityCenterStart
-                && hourRoutePointsList.contains(0.0)){
-            if (notCityStart && !notCityDestination){
+        } else if ((notCityStart || notCityDestination) && !cityCenterDestination && !cityCenterStart
+                && hourRoutePointsList.contains(0.0)) {
+            if (notCityStart && !notCityDestination) {
                 //Toast.makeText(context, "Это 4 вариант", Toast.LENGTH_LONG).show();
                 routHalfFirst();
                 addWaypoints();
-            }else if (!notCityStart){
+            } else if (!notCityStart) {
                 //Toast.makeText(context, "Это 5 вариант", Toast.LENGTH_LONG).show();
                 routHalfSecond();
                 addWaypoints();
-            }else {
+            } else {
                 //Toast.makeText(context, "Это 6 вариант", Toast.LENGTH_LONG).show();
                 routHalfFirst();
                 routHalfSecond();
                 fixedAmountRoutePrices = lengthFirstHalf + lengthSecondHalf;
                 addWaypoints();
             }
-        }else if (!PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.allHours(), true)&&
+        } else if (!PolyUtil.containsLocation(startGeoCoordinates, hoursNSK.allHours(), true) &&
                 !PolyUtil.containsLocation(destinationGeoCoordinates, hoursNSK.allHours(), true)
-                &&hourRoutePointsList.contains(2.0)){
+                && hourRoutePointsList.contains(2.0)) {
             //Toast.makeText(context, "Это 7 вариант", Toast.LENGTH_LONG).show();
             routHalfFirst();
             routHalfSecond();
             fixedAmountRoutePrices = lengthFirstHalf + lengthSecondHalf;
             addWaypoints();
-        }else {
+        } else {
             //Toast.makeText(context, "Это 8 вариант", Toast.LENGTH_LONG).show();
             Waypoint startWaypoint = new Waypoint(startGeoCoordinates);
             Waypoint destinationWaypoint = new Waypoint(destinationGeoCoordinates);
             List<Waypoint> waypoints =
                     new ArrayList<>(Arrays.asList(startWaypoint, destinationWaypoint));
-            if (Truck.km25!=0){
+            if (Truck.km25 != 0) {
                 routingEngine.calculateRoute(
                         waypoints,
                         new RoutingEngine.CarOptions(),
@@ -1072,7 +1049,7 @@ class HereMap{
                                 showDialog("Error while calculating a route:", routingError.toString());
                             }
                         });
-            }else {
+            } else {
                 routingEngine.calculateRoute(
                         waypoints,
                         new RoutingEngine.TruckOptions(),
@@ -1153,7 +1130,7 @@ class HereMap{
             GeoCoordinates maneuverLocation = maneuverInstruction.getCoordinates();
             String maneuverInfo = maneuverInstruction.getText()
                     + ", Action: " + maneuverAction.name()
-                    + ", Location: " + maneuverLocation.toString();
+                    + ", Location: " + maneuverLocation;
             Log.d(LOG_TAG, maneuverInfo);
         }
     }
@@ -1169,7 +1146,7 @@ class HereMap{
         Waypoint waypointCentr = new Waypoint(cityCenterGeo);
         List<Waypoint> waypointsPlusCenter = new ArrayList<>(Arrays.asList(new Waypoint(startGeoCoordinates),
                 waypointCentr, new Waypoint(destinationGeoCoordinates)));
-        if (Truck.km25!=0){
+        if (Truck.km25 != 0) {
             routingEngine.calculateRoute(
                     waypointsPlusCenter,
                     new RoutingEngine.CarOptions(),
@@ -1186,7 +1163,7 @@ class HereMap{
                             showDialog("Error while calculating a route:", routingError.toString());
                         }
                     });
-        }else {
+        } else {
             routingEngine.calculateRoute(
                     waypointsPlusCenter,
                     new RoutingEngine.TruckOptions(),
@@ -1215,7 +1192,7 @@ class HereMap{
         Waypoint waypointCentr = new Waypoint(cityCenterGeo);
         List<Waypoint> waypointsPlusCenter = new ArrayList<>(Arrays.asList(new Waypoint(startGeoCoordinates),
                 waypointCentr));
-        if (Truck.km25!=0){
+        if (Truck.km25 != 0) {
             routingEngine.calculateRoute(
                     waypointsPlusCenter,
                     new RoutingEngine.CarOptions(),
@@ -1228,7 +1205,7 @@ class HereMap{
                             showDialog("Error while calculating a route:", routingError.toString());
                         }
                     });
-        }else {
+        } else {
             routingEngine.calculateRoute(
                     waypointsPlusCenter,
                     new RoutingEngine.TruckOptions(),
@@ -1244,15 +1221,17 @@ class HereMap{
         }
 
     }
+
     private void showFirstHalf(Route routeFir) {
         double lengthInMeters = routeFir.getLengthInMeters();
-        if (fixRoutePriceStart!=0){
+        if (fixRoutePriceStart != 0) {
             lengthFirstHalf = fixRoutePriceStart;
-        }else {
-            lengthFirstHalf = Math.ceil(lengthInMeters/5000)*10;
+        } else {
+            lengthFirstHalf = Math.ceil(lengthInMeters / 5000) * 10;
         }
 
     }
+
     private void routHalfSecond() {
         if (destinationGeoCoordinates == null) {
             showDialog("Error", "Please add a route first.");
@@ -1261,7 +1240,7 @@ class HereMap{
         Waypoint waypointCentr = new Waypoint(cityCenterGeo);
         List<Waypoint> waypointsPlusCenter = new ArrayList<>(Arrays.asList(new Waypoint(destinationGeoCoordinates),
                 waypointCentr));
-        if (Truck.km25!=0){
+        if (Truck.km25 != 0) {
             routingEngine.calculateRoute(
                     waypointsPlusCenter,
                     new RoutingEngine.CarOptions(),
@@ -1274,7 +1253,7 @@ class HereMap{
                             showDialog("Error while calculating a route:", routingError.toString());
                         }
                     });
-        }else {
+        } else {
             routingEngine.calculateRoute(
                     waypointsPlusCenter,
                     new RoutingEngine.TruckOptions(),
@@ -1290,12 +1269,13 @@ class HereMap{
         }
 
     }
+
     private void showSecondHalf(Route routeSec) {
         double lengthInMeters = routeSec.getLengthInMeters();
-        if (fixRoutePriceDestination!=0){
+        if (fixRoutePriceDestination != 0) {
             lengthSecondHalf = fixRoutePriceDestination;
-        }else {
-            lengthSecondHalf = Math.ceil(lengthInMeters/5000)*10;
+        } else {
+            lengthSecondHalf = Math.ceil(lengthInMeters / 5000) * 10;
         }
     }
 
@@ -1354,28 +1334,28 @@ class HereMap{
         }
     }
 
-    private void searchArrayPointInRoute(GeoPolyline gp){
+    private void searchArrayPointInRoute(GeoPolyline gp) {
         hourRoutePointsList.clear();
-        for (GeoCoordinates gc : gp.vertices){
-            if (PolyUtil.containsLocation(gc,hoursNSK.allHours(),true)){
-                if (PolyUtil.containsLocation(gc, hoursNSK.arrHour00, true)){
+        for (GeoCoordinates gc : gp.vertices) {
+            if (PolyUtil.containsLocation(gc, hoursNSK.allHours(), true)) {
+                if (PolyUtil.containsLocation(gc, hoursNSK.arrHour00, true)) {
                     hourRoutePointsList.add(0.0);
-                }else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour05l, true) ||
-                        PolyUtil.containsLocation(gc, hoursNSK.arrHour05r, true)){
+                } else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour05l, true) ||
+                        PolyUtil.containsLocation(gc, hoursNSK.arrHour05r, true)) {
                     hourRoutePointsList.add(0.5);
-                }else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour10l, true) ||
-                        PolyUtil.containsLocation(gc, hoursNSK.arrHour10r, true)){
+                } else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour10l, true) ||
+                        PolyUtil.containsLocation(gc, hoursNSK.arrHour10r, true)) {
                     hourRoutePointsList.add(1.0);
-                }else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour15l, true) ||
-                        PolyUtil.containsLocation(gc, hoursNSK.arrHour15r, true)){
+                } else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour15l, true) ||
+                        PolyUtil.containsLocation(gc, hoursNSK.arrHour15r, true)) {
                     hourRoutePointsList.add(1.5);
-                }else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour20l, true) ||
-                        PolyUtil.containsLocation(gc, hoursNSK.arrHour20r, true)){
+                } else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour20l, true) ||
+                        PolyUtil.containsLocation(gc, hoursNSK.arrHour20r, true)) {
                     hourRoutePointsList.add(2.0);
-                }else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour25l, true) ||
-                        PolyUtil.containsLocation(gc, hoursNSK.arrHour25r, true)){
+                } else if (PolyUtil.containsLocation(gc, hoursNSK.arrHour25l, true) ||
+                        PolyUtil.containsLocation(gc, hoursNSK.arrHour25r, true)) {
                     hourRoutePointsList.add(2.5);
-                }else{
+                } else {
                     hourRoutePointsList.add(3.0);
                 }
             }
